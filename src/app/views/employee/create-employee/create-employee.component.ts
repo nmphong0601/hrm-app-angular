@@ -16,19 +16,27 @@ import {Helper} from '../../../services/helper';
 })
 export class CreateEmployeeComponent implements OnInit, OnDestroy {
 
-  public form: FormGroup;
-  public submitted: boolean;
+  public form: FormGroup = this.fb.group( {
+    'id': new FormControl(),
+    'first_name': new FormControl(),
+    'last_name': new FormControl(),
+    'email': new FormControl(),
+    'gender': new FormControl(),
+    'address': new FormControl(),
+    'job_role': new FormControl()
+  });
+  public submitted: boolean = false;
 
-  private employee = new Employee();
+  private employee: any = new Employee();
   private subscription: Subscription;
 
-  id: FormControl;
-  first_name: FormControl;
-  last_name: FormControl;
-  email: FormControl;
-  gender: FormControl;
-  address: FormControl;
-  job_role: FormControl;
+  id: FormControl = new FormControl();
+  first_name: FormControl = new FormControl();
+  last_name: FormControl = new FormControl();
+  email: FormControl = new FormControl();
+  gender: FormControl = new FormControl();
+  address: FormControl = new FormControl();
+  job_role: FormControl = new FormControl();
 
 
   constructor(private fb: FormBuilder, private modalService: ModalService) {

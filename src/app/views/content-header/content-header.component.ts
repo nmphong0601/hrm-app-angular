@@ -7,9 +7,9 @@ import {Component, Input} from '@angular/core';
 })
 export class ContentHeaderComponent {
 
-  @Input() pageTitle: string;
-  @Input() pageDescription: string;
-  @Input() levels = [];
+  @Input() pageTitle: string = '';
+  @Input() pageDescription: string = '';
+  @Input() levels: any[] = [];
 
 
 }

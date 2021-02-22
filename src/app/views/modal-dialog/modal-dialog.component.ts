@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {ModalService} from '../../services/modal/modal.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs/Subscription';
 export class ModalDialogComponent implements  OnDestroy {
 
   public visible = false;
-  private visibleAnimate = false;
+  public visibleAnimate = false;
   subscription: Subscription;
 
   constructor(private modalService: ModalService) {

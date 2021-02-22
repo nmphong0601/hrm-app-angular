@@ -4,7 +4,7 @@ import {EmployeeService} from '../../../services/employee/employee.service';
 import {PaginatorService} from '../../../services/paginator/paginator.service';
 import {ModalDialogComponent} from '../../modal-dialog/modal-dialog.component';
 import {ModalService} from '../../../services/modal/modal.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {UserService} from '../../../services/user/user.service';
 import {Helper} from '../../../services/helper';
 
@@ -19,10 +19,10 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   // some static variables
   public pageTitle: string = 'Employee list';
   public pageDescription: string = 'A list of all employees';
-  public currentLevel: [{}] = [ {'name': 'Employee', 'class': ''}, {'name': 'list', 'class': 'active'}];
+  public currentLevel: any[] = [ {'name': 'Employee', 'class': ''}, {'name': 'list', 'class': 'active'}];
 
   // Employee list and object initializers
-  private employees: Employee[];
+  private employees: Employee[] = [];
   private employee = new Employee();
 
   // subscriptions
@@ -33,12 +33,14 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   public searchFilter = { text: 'All fields', filter: 'all'};
   public isSearching: boolean = false; // true when search is ongoing
   pager: any = {}; // // pager object
-  pagedItems: any[]; // paged items used for paginator = limited set of employees
+  pagedItems: any[] = []; // paged items used for paginator = limited set of employees
   private sort = { column: 'id', descending: false}; // storing sort values
 
+  private modalServ: ModalService = new ModalService();
+
   // Dialog windows
-  @ViewChild('createDialog') private createDialogModal: ModalDialogComponent;
-  @ViewChild('deleteDialog') private deleteDialogModal: ModalDialogComponent;
+  @ViewChild('createDialog') private createDialogModal: ModalDialogComponent = new ModalDialogComponent(this.modalServ);
+  @ViewChild('deleteDialog') private deleteDialogModal: ModalDialogComponent = new ModalDialogComponent(this.modalServ);
 
   constructor(private employeeService: EmployeeService,
               private paginatorService: PaginatorService,
@@ -69,7 +71,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
    * @param page
    */
   getEmployees(page?: number): void {
-    page = (isNaN(page)) ? 1 : page;
+    page = (isNaN(Number(page))) ? 1 : page;
     this.employeeService.getEmployees();
     this.pager.currentPage = page;
   }
@@ -164,7 +166,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
    * @param columnName
    * @returns {any}
    */
-  selectedClass(columnName): string {
+  selectedClass(columnName: string): string {
     const styleClass = 'hidden-xs ';
     if (columnName === this.sort.column) {
       return styleClass + this.sort.descending ? 'sorting_desc' : 'sorting_asc';

@@ -98,7 +98,7 @@ export class EmployeeService implements OnDestroy {
    * @param key
    * @param descending
    */
-  sortObjects (array: [], key: string, descending: boolean)  {
+  sortObjects (array: any[], key: string, descending: boolean)  {
 
     for (let i = 0; i < array.length; i++) {
       const currVal = array[i][key];
@@ -121,7 +121,7 @@ export class EmployeeService implements OnDestroy {
    * @param searchValue
    * @returns {Array}
    */
-  private searchEmployee(res: Response, searchKey: string, searchValue: any): Employee[] {
+  private searchEmployee(res: any, searchKey: string, searchValue: any): Employee[] {
     const data = Helper.extractData(res);
     const foundValues: any[] = [];
     const regex = new RegExp(searchValue, 'gi');

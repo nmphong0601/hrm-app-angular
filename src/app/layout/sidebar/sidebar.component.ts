@@ -7,6 +7,6 @@ import { User } from '../../services/user/user.model';
   styles: []
 })
 export class SidebarComponent {
-  @Input() user: User;
+  @Input() user: User = new User();
 
 }

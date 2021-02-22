@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import * as _ from 'underscore';
+import { isNumber } from 'underscore';
 
 @Injectable()
 export class PaginatorService {
@@ -27,7 +28,7 @@ export class PaginatorService {
   getPager(totalItems: number, currentPage: number = 1, pageSize?: number): {} {
 
     // calculate total pages
-    this.pageSize = (isNaN(pageSize)) ? this.pageSize : pageSize;
+    this.pageSize = (isNumber(pageSize) && isNaN(pageSize)) ? this.pageSize : 10;
     this.calcPages(totalItems);
 
     let startPage: number, endPage: number;

@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {Employee} from '../../../services/employee/employee.model';
 import {ModalService} from '../../../services/modal/modal.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -12,7 +12,7 @@ export class DeleteEmployeeComponent implements OnDestroy {
 
 
   private subscription = new Subscription;
-  private employee =  new Employee();
+  public employee =  new Employee();
 
   constructor(private modalService: ModalService) {
     // Subscription to modalservice

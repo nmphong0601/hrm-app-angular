@@ -5,7 +5,7 @@ import { TRANSLATIONS } from './translations';
 @Injectable()
 export class TranslateService {
 
-  private _currentLang: string;
+  private _currentLang: string = 'en';
 
   constructor(@Inject(TRANSLATIONS) private __translations: any) { }
 

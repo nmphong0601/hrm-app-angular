@@ -9,13 +9,14 @@ import {TranslateService} from '../../services/translation/translate.service';
 })
 export class HeaderComponent  {
 
-  @Input() appName: string;
-  @Input() user: User;
+  @Input() appName: string = '';
+  @Input() user: User = new User();
 
   constructor( private userService: UserService, private _translate: TranslateService) {}
 
   shortAppName() {
-    return /(\w+)/.exec(this.appName)[1];
+    let regExpExecArr = /(\w+)/.exec(this.appName);
+    return regExpExecArr != null ? regExpExecArr[1] : null;
   }
 
   selectLang(lang: string) {

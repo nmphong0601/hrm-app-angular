@@ -15,10 +15,14 @@ import {TranslateService} from '../../services/translation/translate.service';
 export class SigninComponent  {
 
   public submitted: boolean = false;
+  public loading: boolean = false;
   public showWarning: boolean = false;
-  public form: FormGroup;
-  username: FormControl;
-  password: FormControl;
+  public form: FormGroup = this.fb.group( {
+    'username': '',
+    'password': ''
+  });
+  username: FormControl = new FormControl();
+  password: FormControl = new FormControl();
 
 
   constructor(private userService: UserService, private fb: FormBuilder, private router: Router, private _translate: TranslateService) {

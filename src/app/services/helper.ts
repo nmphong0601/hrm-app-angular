@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError  } from 'rxjs';
 import {  HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 /**
@@ -30,7 +30,7 @@ export class Helper {
       errorMessage = httpError.message ? httpError.message : httpError.toString();
     }
     console.log(errorMessage);
-    return Observable.throw(errorMessage);
+    return throwError(errorMessage);
   }
 
   /**

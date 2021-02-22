@@ -8,6 +8,6 @@ import {Component, Input} from '@angular/core';
 export class FooterComponent  {
   currentYear = new Date().getFullYear();
 
-  @Input() appVersion: string;
+  @Input() appVersion: string = '1.0';
 
 }
