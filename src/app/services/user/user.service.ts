@@ -14,12 +14,10 @@ export class UserService implements OnDestroy {
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   // Subjects
-  private userInfo = new BehaviorSubject<User>(new User());
-  private message = new BehaviorSubject<any>(null);
+  private userInfo = new BehaviorSubject<any>(null);
 
   // Announced
   userInfo$ = this.userInfo.asObservable();
-  message$ = this.message.asObservable();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -93,6 +91,9 @@ export class UserService implements OnDestroy {
     const token: string  = Helper.generateUUID();
     sessionStorage.setItem('hrm-token', token);
     user.token = token;
+
+    sessionStorage.setItem('user-info', JSON.stringify(user));
+
     let url = `${this.userApiUrl}/${user.id}`;
     let options = {headers: this.headers};
 
@@ -125,24 +126,21 @@ export class UserService implements OnDestroy {
    * Send object to save to subscribers
    * @param object
    */
-  saveObject(object: any) {
+  saveUser(object: any) {
     this.userInfo.next(object);
   }
 
   /**
-   * Send object to save to subscribers
-   * @param object
+   * Get object from subcribers
    */
-  sendMessage(object: any) {
-    this.message.next(object);
-  }
+  getUser() {
+    let user = sessionStorage.getItem('user-info');
+    this.saveUser(user?JSON.parse(user):null);
 
-  getUserInfo(): Observable<any> {
     return this.userInfo.asObservable();
   }
 
   ngOnDestroy() {
     this.userInfo.unsubscribe();
-    this.message.unsubscribe();
   }
 }

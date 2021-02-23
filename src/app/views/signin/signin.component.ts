@@ -55,8 +55,6 @@ export class SigninComponent  {
     if (isValid) {
       this.userService.findUser(account).subscribe(
         res => {
-          //this.userService.saveObject(res.userInfo);
-          this.userService.sendMessage('Passing value');
           this.authenticate(res);
         },
         error => this.authenticate({ authenticated: false}));
@@ -70,6 +68,7 @@ export class SigninComponent  {
    * Authentication action response
    */
   private authenticate(res: any): void {
+    debugger;
     if (res.authenticated) {
       this.router.navigate(['/secure']);
     } else {

@@ -51,9 +51,8 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
               private employeeService: EmployeeService,
               private paginatorService: PaginatorService,
               private modalService: ModalService) {
-
-    // subscription of observable userInfo object
-    this.userSub = this.userService.getUserInfo().subscribe(
+    
+    this.userSub = this.userService.userInfo$.subscribe(
       user => {
         if(user){
           this.user = new User(user);
@@ -61,12 +60,6 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.messageSub = this.userService.message$.subscribe(
-      (message) => {
-        alert(message);
-      }
-    );
-    
     // subscription of observable delete object
     this.delSub = this.modalService.objectDelete$.subscribe(
       employee => this.deleteEmployee(employee)
@@ -84,7 +77,12 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getUserInfo();
     this.getEmployees();
+  }
+
+  getUserInfo(): void{
+    this.userService.getUser().subscribe();
   }
 
   /**
