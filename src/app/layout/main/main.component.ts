@@ -12,12 +12,15 @@ export class MainComponent {
 
 
   appName = 'HRM App';
-  appVersion = '4.0';
+  appVersion = '9.0';
   authenticated  = false;
-  public user = new User('', '', '');
+  public user = new User();
 
   constructor(private userService: UserService) {
-    this.userService.authenticate().subscribe((res: User) => this.checkUser(res));
+    this.userService.authenticate().subscribe((res: any) =>{
+      let user = new User(res);
+      this.checkUser(user);
+    });
   }
 
   checkUser(res: User) {

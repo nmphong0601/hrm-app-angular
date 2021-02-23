@@ -50,7 +50,7 @@ export class Helper {
    * @returns {}
    */
   public static extractData(res: HttpResponse<any>): any [] {
-    const body = res.body.json();
+    const body = res.body ? res.body.json() : {data: res};
     return body.data || {};
   }
 

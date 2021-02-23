@@ -18,8 +18,8 @@ export class SigninComponent  {
   public loading: boolean = false;
   public showWarning: boolean = false;
   public form: FormGroup = this.fb.group( {
-    'username': '',
-    'password': ''
+    'username': new FormControl(),
+    'password': new FormControl()
   });
   username: FormControl = new FormControl();
   password: FormControl = new FormControl();

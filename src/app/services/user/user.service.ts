@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParamsOptions, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParamsOptions, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import {User} from './user.model';
 import {Helper} from '../helper';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators';
+import { retry, catchError, map, mergeMap } from 'rxjs/operators';
 
 
 @Injectable()
@@ -21,10 +21,19 @@ export class UserService {
    * @returns {Observable<User>}
    */
   findUser(user: User): Observable<any> {
-    return this.http.get(this.userApiUrl).pipe(
+    return this.http.get<any>(this.userApiUrl).pipe(
       map(
-        (response: any) => {this.searchUser(response, user)}
-        ),
+        (response: HttpResponse<any>) => {
+          debugger;
+          let result = this.searchUser(response, user);
+          return result;
+        }),
+      mergeMap((result) => {
+        if(result.authenticated == true){
+          return this.setToken(result.userInfo);
+        }
+        return null as any;
+      }),
       catchError(Helper.handleError)
     );
   }
@@ -34,10 +43,11 @@ export class UserService {
    * @returns {Observable<User>}
    */
   authenticate(): Observable<any> {
-    return this.http.get(this.userApiUrl).pipe(
+    return this.http.get<any>(this.userApiUrl).pipe(
       map(
-        (response: any) => {this.searchForToken(Helper.extractData(response))}
-        )
+        (response: HttpResponse<any>) => {
+            return this.searchForToken(Helper.extractData(response));
+          })
       );
   }
 
@@ -57,32 +67,33 @@ export class UserService {
    */
   private searchForToken(data: any): {} {
     const storedToken = sessionStorage.getItem('hrm-token');
-    let user: User = new User('', '');
+    let user: User = new User();
     if (!Helper.isEmpty(storedToken)) {
       const foundUser: any[]  = data.filter((user: User) => user.token === storedToken);
-      user = (!Helper.isEmpty(foundUser[0])) ? foundUser[0] : new User('', '');
+      user = (!Helper.isEmpty(foundUser[0])) ? foundUser[0] : new User();
     }
     if (Helper.isEmpty(user.token)) {
       this.router.navigate(['']);
     }
     return user;
-
-
   }
 
   /**
    * Set user token in db and localSession
    * @param user
    */
-  private setToken(user: User): void {
+  private setToken(user: User): Observable<any> {
+    debugger;
     const token: string  = Helper.generateUUID();
     sessionStorage.setItem('hrm-token', token);
     user.token = token;
     let url = `${this.userApiUrl}/${user.id}`;
     let options = {headers: this.headers};
-    this.http.put(url, user, options).pipe(
+
+    return this.http.put<any>(url, user, options).pipe(
+      map((response: HttpResponse<any>)=> {return {authenticated: true, userInfo: user}}),
       catchError(Helper.handleError)
-    ).subscribe();
+    );
   }
 
   /**
@@ -93,12 +104,11 @@ export class UserService {
    */
   private searchUser(res: any, user: User): any {
     const userData = Helper.extractData(res);
-    const result = {authenticated: false};
+    const result = {authenticated: false, userInfo: null};
     const foundPersons: any[] = userData.filter(res => res.username === user.username);
     if (user.password === foundPersons[0].password) {
       result.authenticated = true;
-      this.setToken(foundPersons[0]);
-
+      result.userInfo = foundPersons[0];
     }
     return result;
   }

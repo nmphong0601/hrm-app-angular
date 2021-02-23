@@ -17,7 +17,7 @@ export class FormValidator {
       return { 'incorrectMailFormat': true };
     }
 
-    return { 'incorrectMailFormat': false };
+    return null as any;
   }
 
 
