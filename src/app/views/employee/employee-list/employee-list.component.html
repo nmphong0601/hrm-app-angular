@@ -81,12 +81,18 @@
                 <td  class="hidden-xs" (click)="openDialog(employee)" style="cursor: pointer">{{ employee.job_role }}</td>
 
                 <td>
-                  <button class="btn btn-default" (click)="openDialog(employee)">
+                  <button *ngIf="user && user.job_role=='HR Manager'" class="btn btn-default" (click)="openDialog(employee)">
+                    <span class="fa fa-edit"></span>
+                  </button>
+                  <button *ngIf="user && user.job_role=='HR Manager'" class="btn btn-danger" (click)="openDialog(employee, 'delete')">
+                    <span class="fa fa-trash"></span>
+                  </button>
+                  <!-- <button class="btn btn-default" (click)="openDialog(employee)">
                     <span class="fa fa-edit"></span>
                   </button>
                   <button class="btn btn-danger" (click)="openDialog(employee, 'delete')">
                     <span class="fa fa-trash"></span>
-                  </button>
+                  </button> -->
                 </td>
               </tr>
             </tbody>

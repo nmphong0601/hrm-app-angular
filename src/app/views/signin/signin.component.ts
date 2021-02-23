@@ -53,7 +53,13 @@ export class SigninComponent  {
   signIn(account: User, isValid: boolean) {
     this.submitted = true;
     if (isValid) {
-      this.userService.findUser(account).subscribe(res => this.authenticate(res), error => this.authenticate({ authenticated: false}));
+      this.userService.findUser(account).subscribe(
+        res => {
+          //this.userService.saveObject(res.userInfo);
+          this.userService.sendMessage('Passing value');
+          this.authenticate(res);
+        },
+        error => this.authenticate({ authenticated: false}));
     } else {
       FormValidator.clearFormValues(this.form);
     }

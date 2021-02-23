@@ -1,17 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParamsOptions, HttpResponse, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import {User} from './user.model';
 import {Helper} from '../helper';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import { retry, catchError, map, mergeMap } from 'rxjs/operators';
 
 
 @Injectable()
-export class UserService {
+export class UserService implements OnDestroy {
 
   private userApiUrl = 'api/users';
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  // Subjects
+  private userInfo = new BehaviorSubject<User>(new User());
+  private message = new BehaviorSubject<any>(null);
+
+  // Announced
+  userInfo$ = this.userInfo.asObservable();
+  message$ = this.message.asObservable();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -24,7 +32,6 @@ export class UserService {
     return this.http.get<any>(this.userApiUrl).pipe(
       map(
         (response: HttpResponse<any>) => {
-          debugger;
           let result = this.searchUser(response, user);
           return result;
         }),
@@ -83,7 +90,6 @@ export class UserService {
    * @param user
    */
   private setToken(user: User): Observable<any> {
-    debugger;
     const token: string  = Helper.generateUUID();
     sessionStorage.setItem('hrm-token', token);
     user.token = token;
@@ -91,7 +97,9 @@ export class UserService {
     let options = {headers: this.headers};
 
     return this.http.put<any>(url, user, options).pipe(
-      map((response: HttpResponse<any>)=> {return {authenticated: true, userInfo: user}}),
+      map((response: HttpResponse<any>)=> {
+        return {authenticated: true, userInfo: user}
+      }),
       catchError(Helper.handleError)
     );
   }
@@ -111,5 +119,30 @@ export class UserService {
       result.userInfo = foundPersons[0];
     }
     return result;
+  }
+
+  /**
+   * Send object to save to subscribers
+   * @param object
+   */
+  saveObject(object: any) {
+    this.userInfo.next(object);
+  }
+
+  /**
+   * Send object to save to subscribers
+   * @param object
+   */
+  sendMessage(object: any) {
+    this.message.next(object);
+  }
+
+  getUserInfo(): Observable<any> {
+    return this.userInfo.asObservable();
+  }
+
+  ngOnDestroy() {
+    this.userInfo.unsubscribe();
+    this.message.unsubscribe();
   }
 }

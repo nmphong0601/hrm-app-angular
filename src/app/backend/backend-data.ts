@@ -12,7 +12,7 @@ export class BackendData implements InMemoryDbService {
     const users = [
       {
         id: 1,
-        name: 'Mark Westenberg',
+        name: 'Nguyễn Minh Phong',
         image: 'assets/images/Mark-Westenberg.jpg',
         username: 'nmphong@gmail.com',
         password: '123456',
@@ -21,12 +21,21 @@ export class BackendData implements InMemoryDbService {
       },
       {
         id: 2,
-        name: 'Walter van Berkel',
+        name: 'Nguyễn Trung Hiếu',
         image: 'assets/images/Walter-berkel-trivento.jpg',
         username: 'hieu_neo@gmail.com',
         password: 'hieuneo123',
         job_role: 'HR Manager',
         token: '',
+      },
+      {
+        id: 3,
+        name: 'Hồ Quang Phát',
+        image: 'assets/images/Walter-berkel-trivento.jpg',
+        username: 'nhanvien@gmail.com',
+        password: 'nhanvien123',
+        job_role: 'VP Sales',
+        token: ''
       }
 
     ];

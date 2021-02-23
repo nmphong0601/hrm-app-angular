@@ -7,6 +7,7 @@ import {ModalService} from '../../../services/modal/modal.service';
 import {Subscription} from 'rxjs';
 import {UserService} from '../../../services/user/user.service';
 import {Helper} from '../../../services/helper';
+import { User } from 'src/app/services/user/user.model';
 
 @Component({
   selector: 'app-employee-list',
@@ -24,8 +25,12 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   // Employee list and object initializers
   private employees: Employee[] = [];
   private employee = new Employee();
+  
+  public user = new User();
 
   // subscriptions
+  private messageSub = new Subscription();
+  private userSub = new Subscription();
   private delSub = new Subscription();
   private editSub = new Subscription();
   private employeeSub = new Subscription();
@@ -42,10 +47,26 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   @ViewChild('createDialog') private createDialogModal: ModalDialogComponent = new ModalDialogComponent(this.modalServ);
   @ViewChild('deleteDialog') private deleteDialogModal: ModalDialogComponent = new ModalDialogComponent(this.modalServ);
 
-  constructor(private employeeService: EmployeeService,
+  constructor(private userService: UserService,
+              private employeeService: EmployeeService,
               private paginatorService: PaginatorService,
               private modalService: ModalService) {
 
+    // subscription of observable userInfo object
+    this.userSub = this.userService.getUserInfo().subscribe(
+      user => {
+        if(user){
+          this.user = new User(user);
+        }
+      }
+    );
+
+    this.messageSub = this.userService.message$.subscribe(
+      (message) => {
+        alert(message);
+      }
+    );
+    
     // subscription of observable delete object
     this.delSub = this.modalService.objectDelete$.subscribe(
       employee => this.deleteEmployee(employee)
@@ -186,6 +207,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
    * Unsubscribing subscriptions clearing memory
    */
   ngOnDestroy() {
+    this.userSub.unsubscribe();
     this.editSub.unsubscribe();
     this.delSub.unsubscribe();
     this.employeeSub.unsubscribe();
