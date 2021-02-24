@@ -12,7 +12,7 @@ import { User } from 'src/app/services/user/user.model';
 @Component({
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
-  providers: [ EmployeeService, PaginatorService, ModalService, UserService ],
+  providers: [ EmployeeService, PaginatorService, ModalService ],
   styleUrls: ['../../../../../node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css']
 })
 export class EmployeeListComponent implements OnInit, OnDestroy {
@@ -29,7 +29,6 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   public user = new User();
 
   // subscriptions
-  private messageSub = new Subscription();
   private userSub = new Subscription();
   private delSub = new Subscription();
   private editSub = new Subscription();
@@ -81,8 +80,13 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     this.getEmployees();
   }
 
-  getUserInfo(): void{
-    this.userService.getUser().subscribe();
+  getUserInfo() {
+    // this.userService.getUser().subscribe();
+    this.userService.userInfo$.subscribe(
+      user => {
+        this.user = new User(user);
+      }
+    );
   }
 
   /**

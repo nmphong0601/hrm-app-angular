@@ -7,7 +7,11 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import { retry, catchError, map, mergeMap } from 'rxjs/operators';
 
 
-@Injectable()
+@Injectable({
+  // declares that this service should be created
+  // by the root application injector.
+  providedIn: 'root',
+})
 export class UserService implements OnDestroy {
 
   private userApiUrl = 'api/users';
@@ -92,7 +96,7 @@ export class UserService implements OnDestroy {
     sessionStorage.setItem('hrm-token', token);
     user.token = token;
 
-    sessionStorage.setItem('user-info', JSON.stringify(user));
+    //sessionStorage.setItem('user-info', JSON.stringify(user));
 
     let url = `${this.userApiUrl}/${user.id}`;
     let options = {headers: this.headers};
@@ -134,9 +138,9 @@ export class UserService implements OnDestroy {
    * Get object from subcribers
    */
   getUser() {
-    let user = sessionStorage.getItem('user-info');
-    this.saveUser(user?JSON.parse(user):null);
-
+    // let user = sessionStorage.getItem('user-info');
+    // this.saveUser(user?JSON.parse(user):null);
+    debugger;
     return this.userInfo.asObservable();
   }
 

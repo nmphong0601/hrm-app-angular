@@ -26,7 +26,8 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import {TRANSLATION_PROVIDERS} from './services/translation/translations';
 import { TranslatePipe } from './services/translation/translate.pipe';
 import { TranslateService } from './services/translation/translate.service';
-import { ModalService } from './services/modal/modal.service';;
+import { ModalService } from './services/modal/modal.service';
+import { UserService } from './services/user/user.service';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { ModalService } from './services/modal/modal.service';;
     InMemoryWebApiModule.forRoot(BackendData),
     AppRoutingModule
   ],
-  providers: [ModalService, TRANSLATION_PROVIDERS, TranslateService],
+  providers: [ModalService, TRANSLATION_PROVIDERS, TranslateService, UserService],//Khai báo những Service sẽ dùng 1 instance service xuyên suốt cả phần mềm
   bootstrap: [AppComponent]
 })
 export class AppModule { }

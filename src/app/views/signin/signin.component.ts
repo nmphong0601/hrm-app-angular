@@ -10,7 +10,7 @@ import {TranslateService} from '../../services/translation/translate.service';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
-  providers: [UserService]
+  // providers: [UserService]
 })
 export class SigninComponent  {
 
@@ -23,7 +23,6 @@ export class SigninComponent  {
   });
   username: FormControl = new FormControl();
   password: FormControl = new FormControl();
-
 
   constructor(private userService: UserService, private fb: FormBuilder, private router: Router, private _translate: TranslateService) {
     this.createForm();
@@ -68,8 +67,8 @@ export class SigninComponent  {
    * Authentication action response
    */
   private authenticate(res: any): void {
-    debugger;
     if (res.authenticated) {
+      this.userService.saveUser(res.userInfo);
       this.router.navigate(['/secure']);
     } else {
       this.showWarning = true;
