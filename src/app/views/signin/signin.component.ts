@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user/user.service';
 import {User} from '../../services/user/user.model';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
@@ -12,7 +12,7 @@ import {TranslateService} from '../../services/translation/translate.service';
   templateUrl: './signin.component.html',
   // providers: [UserService]
 })
-export class SigninComponent  {
+export class SigninComponent implements OnInit {
 
   public submitted: boolean = false;
   public loading: boolean = false;
@@ -26,6 +26,10 @@ export class SigninComponent  {
 
   constructor(private userService: UserService, private fb: FormBuilder, private router: Router, private _translate: TranslateService) {
     this.createForm();
+  }
+
+  ngOnInit() {
+    this.userService.userInfo$.subscribe();
   }
 
   /**
@@ -67,8 +71,9 @@ export class SigninComponent  {
    * Authentication action response
    */
   private authenticate(res: any): void {
+    this.userService.saveUser(res.user);
+
     if (res.authenticated) {
-      this.userService.saveUser(res.userInfo);
       this.router.navigate(['/secure']);
     } else {
       this.showWarning = true;

@@ -7,18 +7,14 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import { retry, catchError, map, mergeMap } from 'rxjs/operators';
 
 
-@Injectable({
-  // declares that this service should be created
-  // by the root application injector.
-  providedIn: 'root',
-})
+@Injectable()//https://stackoverflow.com/questions/53571546/angular-7-shared-service-is-not-shared
 export class UserService implements OnDestroy {
 
   private userApiUrl = 'api/users';
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   // Subjects
-  private userInfo = new BehaviorSubject<any>(null);
+  private userInfo = new BehaviorSubject<User>(new User());
 
   // Announced
   userInfo$ = this.userInfo.asObservable();

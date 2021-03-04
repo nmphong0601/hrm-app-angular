@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {UserService} from '../../../services/user/user.service';
 import {Helper} from '../../../services/helper';
 import { User } from 'src/app/services/user/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-list',
@@ -47,6 +48,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   @ViewChild('deleteDialog') private deleteDialogModal: ModalDialogComponent = new ModalDialogComponent(this.modalServ);
 
   constructor(private userService: UserService,
+              private router: Router,
               private employeeService: EmployeeService,
               private paginatorService: PaginatorService,
               private modalService: ModalService) {
@@ -59,14 +61,14 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
       }
     );
 
-    // subscription of observable delete object
-    this.delSub = this.modalService.objectDelete$.subscribe(
-      employee => this.deleteEmployee(employee)
-    );
+    // // subscription of observable delete object
+    // this.delSub = this.modalService.objectDelete$.subscribe(
+    //   employee => this.deleteEmployee(employee)
+    // );
 
-    // subscription of observable saveObject
-    this.editSub = this.modalService.objectSave$.subscribe(
-      employee => this.editEmployee(employee));
+    // // subscription of observable saveObject
+    // this.editSub = this.modalService.objectSave$.subscribe(
+    //   employee => this.editEmployee(employee));
 
     // subscription of observable employees
     this.employeeSub = this.employeeService.employeeList$.subscribe(
@@ -76,17 +78,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getUserInfo();
-    this.getEmployees();
-  }
-
-  getUserInfo() {
-    // this.userService.getUser().subscribe();
-    this.userService.userInfo$.subscribe(
-      user => {
-        this.user = new User(user);
-      }
-    );
+    //this.getEmployees();
   }
 
   /**
